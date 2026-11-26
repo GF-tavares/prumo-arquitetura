@@ -1,0 +1,62 @@
+---
+// A quebra: fundo claro depois de várias seções escuras. A tipografia vira arquitetura.
+---
+
+<section class="statement theme-light" id="statement" data-header="light" data-chapter="Declaração" data-statement aria-labelledby="statement-title">
+  <p class="statement__label wrap t-mono"><span class="idx"><span>06</span><span>Declaração</span></span></p>
+  <h2 id="statement-title" class="sr-only">O espaço deve sobreviver à moda.</h2>
+
+  <div class="statement__lines" aria-hidden="true">
+    <span class="st" data-st data-dir="1">O espaço</span>
+    <span class="st" data-st data-dir="-1">Deve</span>
+    <span class="st" data-st data-dir="1">Sobreviver</span>
+    <span class="st" data-st data-dir="-1"><span class="st__ghost" data-st-trend>À moda.</span></span>
+  </div>
+
+  <p class="statement__foot wrap t-mono">Uma casa boa é desenhada para durar mais do que a moda que a inspirou.</p>
+</section>
+
+<style>
+  .statement {
+    position: relative;
+    overflow: clip;
+    padding-block: clamp(72px, 12vh, 140px) clamp(48px, 8vh, 96px);
+  }
+  .statement__label {
+    color: rgb(12 12 11 / 0.6);
+    margin-bottom: clamp(20px, 4vh, 48px);
+  }
+  .statement__lines {
+    display: grid;
+  }
+  .st {
+    display: block;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: clamp(4.6rem, 1rem + 20vw, 26rem);
+    line-height: 0.76;
+    letter-spacing: -0.075em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding-left: var(--gutter);
+    will-change: transform;
+  }
+  .st__ghost {
+    color: transparent;
+    -webkit-text-stroke: clamp(1px, 0.18vw, 3px) var(--paper-ink);
+    display: inline-block;
+  }
+  @media (max-width: 720px) {
+    .st {
+      font-size: 15.6vw;
+    }
+  }
+  .statement__foot {
+    margin-top: clamp(32px, 7vh, 80px);
+    color: rgb(12 12 11 / 0.62);
+    max-width: 60ch;
+    text-transform: none;
+    letter-spacing: 0.04em;
+    font-size: 12px;
+  }
+</style>

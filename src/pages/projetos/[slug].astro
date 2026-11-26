@@ -1,0 +1,356 @@
+---
+import { Picture } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Menu from '../../components/Menu.astro';
+import Cursor from '../../components/Cursor.astro';
+import Hud from '../../components/Hud.astro';
+import Footer from '../../components/Footer.astro';
+import { photos } from '../../content/assets';
+import { projects, type Project } from '../../content/projects';
+import { site } from '../../config/site';
+
+export function getStaticPaths() {
+  return projects.map((p, i) => ({
+    params: { slug: p.slug },
+    props: { p, next: projects[(i + 1) % projects.length], total: projects.length },
+  }));
+}
+
+interface Props {
+  p: Project;
+  next: Project;
+  total: number;
+}
+const { p, next, total } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const cover = photos[p.cover];
+const nextCover = photos[next.cover];
+const gallery = p.gallery.map((k) => photos[k]);
+---
+
+<Base title={`${p.name}, ${p.city} | ${site.name}`} description={p.concept} ogPhoto={p.cover}>
+  <Fragment slot="chrome">
+    <Header />
+    <Menu />
+    <Hud />
+    <Cursor />
+  </Fragment>
+
+  <article class="proj" data-proj data-header="dark" data-chapter={p.name}>
+    <header class="proj__hero">
+      <div class="proj__cover" data-proj-cover>
+        <Picture
+          src={cover.src}
+          alt={cover.alt}
+          widths={[900, 1400, 1920, 2560]}
+          sizes="100vw"
+          formats={['avif', 'webp']}
+        fallbackFormat="webp"
+          loading="eager"
+          fetchpriority="high"
+          decoding="sync"
+          class="proj__img"
+          data-proj-img
+          style={`object-position:${cover.focus}`}
+        />
+        <div class="proj__shade" aria-hidden="true"></div>
+      </div>
+      <div class="proj__heading wrap">
+        <p class="proj__kicker t-mono" data-proj-fade>
+          <span class="idx"><span>{p.n} / {String(total).padStart(2, '0')}</span><span>{p.category}</span></span>
+        </p>
+        <h1 class="proj__title t-serif"><span class="line-mask"><span data-proj-line>{p.name}</span></span></h1>
+        <p class="proj__place t-mono" data-proj-fade>{p.city}, {p.year}. {p.area} m²</p>
+      </div>
+    </header>
+
+    <section class="proj__intro wrap">
+      <p class="proj__concept t-lead" data-reveal>{p.concept}</p>
+      <div class="proj__story t-body" data-reveal>
+        {p.story.map((para) => <p>{para}</p>)}
+      </div>
+    </section>
+
+    <section class="proj__facts wrap" aria-label="Ficha técnica">
+      <dl class="facts t-mono">
+        <div data-reveal><dt>Local</dt><dd>{p.city}</dd></div>
+        <div data-reveal><dt>Ano</dt><dd>{p.year}</dd></div>
+        <div data-reveal><dt>Categoria</dt><dd>{p.category}</dd></div>
+        <div data-reveal><dt>Área</dt><dd>{p.area} m²</dd></div>
+        {p.facts.map((f) => <div data-reveal><dt>{f.label}</dt><dd>{f.value}</dd></div>)}
+      </dl>
+    </section>
+
+    {
+      gallery.length > 0 && (
+        <section class="proj__gallery" aria-label="Imagens do projeto">
+          {gallery.map((g, i) => (
+            <figure class={`gal gal--${i % 2 === 0 ? 'wide' : 'half'}`} data-gal>
+              <div class="gal__img" data-gal-img>
+                <Picture
+                  src={g.src}
+                  alt={g.alt}
+                  widths={[800, 1200, 1800, 2400]}
+                  sizes={i % 2 === 0 ? '100vw' : '(max-width: 899px) 92vw, 56vw'}
+                  formats={['avif', 'webp']}
+        fallbackFormat="webp"
+                  loading="lazy"
+                  decoding="async"
+                  style={`object-position:${g.focus}`}
+                />
+              </div>
+              <figcaption class="t-mono t-mono--dim wrap">Fig. {String(i + 1).padStart(2, '0')} / {p.name}</figcaption>
+            </figure>
+          ))}
+        </section>
+      )
+    }
+
+    <nav class="proj__next" aria-label="Próximo projeto">
+      <a class="next" href={`${base}/projetos/${next.slug}/`} data-cursor="ver">
+        <div class="next__bg" aria-hidden="true">
+          <Picture
+            src={nextCover.src}
+            alt=""
+            widths={[720, 1280, 1920]}
+            sizes="100vw"
+            formats={['avif', 'webp']}
+        fallbackFormat="webp"
+            loading="lazy"
+            decoding="async"
+            style={`object-position:${nextCover.focus}`}
+          />
+        </div>
+        <span class="next__label t-mono wrap"><span class="idx"><span>{next.n}</span><span>Próximo projeto</span></span></span>
+        <span class="next__name t-serif wrap">{next.name}</span>
+        <span class="next__meta t-mono wrap">{next.city}, {next.year}</span>
+      </a>
+    </nav>
+
+    <Footer />
+  </article>
+</Base>
+
+<style>
+  .proj {
+    background: var(--ink);
+    color: var(--bone);
+  }
+  .proj__hero {
+    position: relative;
+    height: 100svh;
+    min-height: 560px;
+    overflow: clip;
+    display: grid;
+    align-items: end;
+  }
+  .proj__cover {
+    position: absolute;
+    inset: 0;
+  }
+  .proj__cover :global(picture),
+  .proj__img {
+    width: 100%;
+    height: 100%;
+  }
+  .proj__img {
+    object-fit: cover;
+    transform-origin: 50% 50%;
+    will-change: transform;
+  }
+  .proj__shade {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to top, rgb(10 10 10 / 0.85), transparent 55%),
+      linear-gradient(to bottom, rgb(10 10 10 / 0.5), transparent 26%);
+  }
+  .proj__heading {
+    position: relative;
+    display: grid;
+    gap: clamp(10px, 1.8vh, 22px);
+    padding-bottom: clamp(28px, 6vh, 72px);
+  }
+  .proj__kicker {
+    color: var(--bone);
+  }
+  .proj__title {
+    font-size: clamp(3.6rem, 0.6rem + 12.4vw, 15rem);
+    line-height: 0.88;
+    letter-spacing: -0.04em;
+  }
+  .proj__place {
+    color: var(--bone-2);
+  }
+  :global(.js) .proj [data-proj-line] {
+    visibility: hidden;
+  }
+  :global(.js) .proj [data-proj-fade] {
+    opacity: 0;
+  }
+
+  .proj__intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: clamp(28px, 6vw, 120px);
+    padding-block: clamp(72px, 14vh, 180px);
+  }
+  .proj__concept {
+    font-size: clamp(1.5rem, 0.8rem + 2.4vw, 3.2rem);
+    line-height: 1.16;
+    letter-spacing: -0.025em;
+    max-width: 22ch;
+  }
+  .proj__story {
+    display: grid;
+    gap: 1.2em;
+    color: var(--bone-2);
+    max-width: 52ch;
+    align-content: start;
+    padding-top: 0.6em;
+  }
+  :global(.js) .proj [data-reveal] {
+    opacity: 0;
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    border-top: 1px solid var(--line-2);
+  }
+  .facts > div {
+    padding: 18px 12px 24px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .facts dt {
+    color: var(--bone-3);
+    margin-bottom: 6px;
+  }
+  .facts dd {
+    margin: 0;
+    text-transform: none;
+    letter-spacing: 0.04em;
+    font-size: 12px;
+  }
+  .proj__facts {
+    padding-bottom: clamp(56px, 10vh, 120px);
+  }
+
+  .proj__gallery {
+    display: grid;
+    gap: clamp(28px, 6vh, 72px);
+    padding-bottom: clamp(72px, 14vh, 160px);
+  }
+  .gal {
+    margin: 0;
+    display: grid;
+    gap: 12px;
+  }
+  .gal--wide .gal__img {
+    aspect-ratio: 16 / 9;
+  }
+  .gal--half {
+    padding-left: var(--gutter);
+    justify-items: end;
+    grid-template-columns: minmax(0, 0.44fr) minmax(0, 0.56fr);
+  }
+  .gal--half .gal__img {
+    grid-column: 2;
+    aspect-ratio: 4 / 3;
+  }
+  .gal--half figcaption {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: end;
+    justify-self: start;
+    padding-left: 0;
+  }
+  .gal__img {
+    overflow: hidden;
+    background: var(--ink-3);
+    width: 100%;
+  }
+  .gal__img :global(picture),
+  .gal__img :global(img) {
+    width: 100%;
+    height: 100%;
+  }
+  .gal__img :global(img) {
+    object-fit: cover;
+    transform: scale(1.1);
+  }
+  .gal figcaption {
+    width: 100%;
+  }
+
+  /* Próximo projeto */
+  .proj__next {
+    border-top: 1px solid var(--line-2);
+  }
+  .next {
+    position: relative;
+    display: grid;
+    gap: 8px;
+    padding-block: clamp(72px, 16vh, 200px);
+    overflow: clip;
+    isolation: isolate;
+  }
+  .next__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.9s var(--ease-soft);
+  }
+  .next__bg :global(picture),
+  .next__bg :global(img) {
+    width: 100%;
+    height: 100%;
+  }
+  .next__bg :global(img) {
+    object-fit: cover;
+    filter: brightness(0.45);
+    transform: scale(1.06);
+    transition: transform 2s var(--ease-out);
+  }
+  .next:hover .next__bg,
+  .next:focus-visible .next__bg {
+    opacity: 1;
+  }
+  .next:hover .next__bg :global(img) {
+    transform: scale(1);
+  }
+  .next__label {
+    color: var(--bone-2);
+  }
+  .next__name {
+    font-size: clamp(3.4rem, 0.6rem + 11vw, 13rem);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+  }
+  .next__meta {
+    color: var(--bone-2);
+  }
+
+  @media (max-width: 899px) {
+    .proj__intro {
+      grid-template-columns: 1fr;
+    }
+    .facts {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .gal--half {
+      grid-template-columns: 1fr;
+      padding-left: 0;
+    }
+    .gal--half .gal__img {
+      grid-column: 1;
+    }
+    .gal--half figcaption {
+      grid-column: 1;
+      grid-row: 2;
+    }
+  }
+</style>

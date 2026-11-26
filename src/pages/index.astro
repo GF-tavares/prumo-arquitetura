@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import Intro from '../components/Intro.astro';
+import Header from '../components/Header.astro';
+import Menu from '../components/Menu.astro';
+import Cursor from '../components/Cursor.astro';
+import Hud from '../components/Hud.astro';
+import Hero from '../components/sections/Hero.astro';
+import Manifesto from '../components/sections/Manifesto.astro';
+import Sequence from '../components/sections/Sequence.astro';
+import Projects from '../components/sections/Projects.astro';
+import MaterialLab from '../components/sections/MaterialLab.astro';
+import Method from '../components/sections/Method.astro';
+import Studio from '../components/sections/Studio.astro';
+import Statement from '../components/sections/Statement.astro';
+import Contact from '../components/sections/Contact.astro';
+---
+
+<Base home>
+  <Fragment slot="chrome">
+    <Header />
+    <Menu />
+    <Hud />
+    <Cursor />
+  </Fragment>
+  <Intro slot="after" />
+  <Hero />
+  <Manifesto />
+  <Sequence />
+  <Projects />
+  <MaterialLab />
+  <Method />
+  <Studio />
+  <Statement />
+  <Contact />
+</Base>

@@ -1,0 +1,393 @@
+---
+import { Picture } from 'astro:assets';
+import { materialBackdrops, materialShots } from '../../content/assets';
+
+const materials = [
+  { id: 'travertine', n: '01', name: 'Travertino', spec: 'Polido fosco / 30 mm', text: 'Travertino romano, cortado no veio. Quente ao toque, frio ao olhar.' },
+  { id: 'concrete', n: '02', name: 'Concreto', spec: 'Fôrma de tábua / 25 MPa', text: 'Concreto aparente moldado em tábua. Cada junta é uma decisão.' },
+  { id: 'oak', n: '03', name: 'Carvalho', spec: 'Óleo natural / 22 mm', text: 'Carvalho maciço com óleo natural. Escurece com a luz do lugar.' },
+  { id: 'steel', n: '04', name: 'Aço', spec: 'Patinado / 6 mm', text: 'Aço carbono patinado. A linha mais fina que a estrutura permite.' },
+  { id: 'glass', n: '05', name: 'Vidro', spec: 'Extra claro / 12 mm', text: 'Vidro extra claro, sem moldura aparente. O limite que some.' },
+] as const;
+---
+
+<section class="lab" id="lab" data-header="dark" data-chapter="Materiais" data-lab aria-labelledby="lab-title">
+  <div class="lab__bgs" aria-hidden="true">
+    {
+      materials.map((m) => (
+        <div class="lab__bg" data-lab-bg={m.id}>
+          <Picture
+            src={materialBackdrops[m.id]}
+            alt=""
+            widths={[900, 1600]}
+            sizes="100vw"
+            formats={['avif', 'webp']}
+        fallbackFormat="webp"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      ))
+    }
+  </div>
+  <div class="lab__scrim" aria-hidden="true"></div>
+
+  <div class="wrap lab__inner">
+    <header class="lab__head">
+      <p class="lab__label t-mono"><span class="idx"><span>03</span><span>Laboratório de materiais</span></span></p>
+      <h2 id="lab-title" class="lab__title">
+        <span class="line-mask"><span data-lab-line class="t-sans-display">Material não é acabamento.</span></span>
+        <span class="line-mask"><span data-lab-line class="t-serif lab__title-em"><em>É parte da arquitetura.</em></span></span>
+      </h2>
+    </header>
+
+    <div class="lab__body">
+      <ul class="lab__list" role="list" data-lab-list>
+        {
+          materials.map((m, i) => (
+            <li class="lab__row" data-lab-row>
+              <button class="lab__item" type="button" data-mat={m.id} data-i={i} data-place={materialShots[m.id].place} aria-pressed={i === 0 ? 'true' : 'false'} data-cursor="explorar">
+                <span class="lab__n t-mono">{m.n}</span>
+                <span class="lab__name t-sans-display">{m.name}</span>
+                <span class="lab__spec t-mono">{m.spec}</span>
+                <span class="lab__desc">
+                  <span class="lab__desc-in">
+                    <span class="t-small">{m.text}</span>
+                    <span class="lab__mshot">
+                      <Picture
+                        src={materialShots[m.id].src}
+                        alt={`${m.name}: ${materialShots[m.id].alt}`}
+                        widths={[480, 800, 1200]}
+                        sizes="92vw"
+                        formats={['avif', 'webp']}
+        fallbackFormat="webp"
+                        loading="lazy"
+                        decoding="async"
+                        style={`object-position:${materialShots[m.id].focus}`}
+                      />
+                      <span class="lab__mplace t-mono">{materialShots[m.id].place}</span>
+                    </span>
+                  </span>
+                </span>
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+
+      <figure class="lab__stage" data-lab-stage aria-hidden="true">
+        <div class="lab__frame">
+          {
+            materials.map((m, i) => (
+              <div class="lab__shot" data-shot={m.id} data-i={i}>
+                <Picture
+                  src={materialShots[m.id].src}
+                  alt=""
+                  widths={[640, 960, 1400]}
+                  sizes="(max-width: 899px) 1px, 34vw"
+                  formats={['avif', 'webp']}
+        fallbackFormat="webp"
+                  loading="lazy"
+                  decoding="async"
+                  style={`object-position:${materialShots[m.id].focus}`}
+                />
+              </div>
+            ))
+          }
+          <span class="lab__mark lab__mark--tl"></span>
+          <span class="lab__mark lab__mark--tr"></span>
+          <span class="lab__mark lab__mark--bl"></span>
+          <span class="lab__mark lab__mark--br"></span>
+        </div>
+        <figcaption class="lab__caption t-mono">
+          <span data-lab-fig>Fig. 06.1</span>
+          <span class="lab__cap-name" data-lab-name>{materials[0].name}</span>
+          <span class="lab__cap-place t-mono--dim" data-lab-place>{materialShots.travertine.place}</span>
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<style>
+  .lab {
+    position: relative;
+    background: var(--ink);
+    color: var(--bone);
+    overflow: clip;
+    padding-block: clamp(96px, 16vh, 190px);
+  }
+
+  .lab__bgs {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .lab__bg {
+    position: absolute;
+    inset: 0;
+    clip-path: circle(0px at 50% 50%);
+    overflow: hidden;
+  }
+  .lab__bg :global(picture),
+  .lab__bg :global(img) {
+    width: 100%;
+    height: 100%;
+  }
+  .lab__bg :global(img) {
+    object-fit: cover;
+    transform: scale(1.06);
+  }
+  .lab__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg, rgb(10 10 10 / 0.5), rgb(10 10 10 / 0.12) 60%, rgb(10 10 10 / 0.3)),
+      linear-gradient(to bottom, var(--ink), transparent 14%, transparent 86%, var(--ink));
+  }
+
+  .lab__inner {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    gap: clamp(40px, 8vh, 96px);
+  }
+
+  .lab__label {
+    color: var(--bone-2);
+    margin-bottom: clamp(16px, 3vh, 30px);
+  }
+  .lab__title {
+    display: grid;
+    font-size: clamp(2.2rem, 0.7rem + 5.7vw, 7.4rem);
+    line-height: 0.96;
+    max-width: 26ch;
+  }
+  .lab__title .t-sans-display {
+    display: block;
+    line-height: 0.96;
+    letter-spacing: -0.045em;
+  }
+  .lab__title-em {
+    display: block;
+    text-transform: none;
+    font-size: 1.06em;
+    letter-spacing: -0.03em;
+  }
+  :global(.js) .lab [data-lab-line] {
+    visibility: hidden;
+  }
+
+  .lab__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    gap: var(--gap);
+    align-items: start;
+  }
+
+  /* ---- Tiras editoriais ---- */
+  .lab__list {
+    display: grid;
+    border-top: 1px solid var(--line-2);
+  }
+  .lab__row {
+    border-bottom: 1px solid var(--line-2);
+  }
+  .lab__item {
+    width: 100%;
+    display: grid;
+    grid-template-columns: clamp(34px, 5vw, 76px) minmax(0, 1fr) auto;
+    grid-template-areas:
+      'n name spec'
+      '. desc desc';
+    align-items: baseline;
+    column-gap: var(--gap);
+    text-align: left;
+    padding-block: clamp(14px, 2.6vh, 30px);
+    opacity: 0.62;
+    transition: opacity 0.5s var(--ease-soft);
+  }
+  .lab__item:hover,
+  .lab__item:focus-visible,
+  .lab__item[aria-pressed='true'] {
+    opacity: 1;
+  }
+  .lab__n {
+    grid-area: n;
+    color: var(--bone-3);
+  }
+  .lab__name {
+    grid-area: name;
+    font-size: clamp(2.3rem, 0.8rem + 5.2vw, 6.4rem);
+    line-height: 0.94;
+    letter-spacing: -0.05em;
+    font-weight: 500;
+    transition:
+      transform 0.9s var(--ease-out),
+      letter-spacing 0.9s var(--ease-out);
+  }
+  .lab__item:hover .lab__name {
+    transform: translateX(0.08em);
+  }
+  .lab__spec {
+    grid-area: spec;
+    color: var(--bone-2);
+  }
+  .lab__desc {
+    grid-area: desc;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.8s var(--ease-out);
+  }
+  .lab__desc-in {
+    overflow: hidden;
+    min-height: 0;
+    max-width: 44ch;
+    color: var(--bone-2);
+    padding-top: 0;
+    display: grid;
+    gap: 14px;
+  }
+  .lab__item[aria-pressed='true'] .lab__desc {
+    grid-template-rows: 1fr;
+  }
+  .lab__item[aria-pressed='true'] .lab__desc-in {
+    padding-top: 10px;
+  }
+  /* foto do ambiente dentro da tira: só no celular (no desktop ela vive no palco ao lado) */
+  .lab__mshot {
+    display: none;
+  }
+
+  /* ---- Foto do ambiente (desktop) ---- */
+  .lab__stage {
+    position: sticky;
+    top: 12vh;
+    margin: 0;
+    display: grid;
+    gap: 12px;
+  }
+  .lab__frame {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    min-height: 320px;
+    overflow: hidden;
+    background: var(--ink-3);
+  }
+  .lab__shot {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    clip-path: inset(100% 0 0 0);
+  }
+  .lab__shot:first-of-type {
+    clip-path: inset(0 0 0 0);
+  }
+  .lab__shot :global(picture),
+  .lab__shot :global(img) {
+    width: 100%;
+    height: 100%;
+  }
+  .lab__shot :global(img) {
+    object-fit: cover;
+    transform: scale(1.04);
+  }
+  .lab__mark {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    pointer-events: none;
+    z-index: 3;
+  }
+  .lab__mark::before,
+  .lab__mark::after {
+    content: '';
+    position: absolute;
+    background: var(--bone);
+    opacity: 0.75;
+  }
+  .lab__mark::before {
+    width: 12px;
+    height: 1px;
+  }
+  .lab__mark::after {
+    width: 1px;
+    height: 12px;
+  }
+  .lab__mark--tl {
+    left: 10px;
+    top: 10px;
+  }
+  .lab__mark--tr {
+    right: 10px;
+    top: 10px;
+    transform: scaleX(-1);
+  }
+  .lab__mark--bl {
+    left: 10px;
+    bottom: 10px;
+    transform: scaleY(-1);
+  }
+  .lab__mark--br {
+    right: 10px;
+    bottom: 10px;
+    transform: scale(-1);
+  }
+  .lab__caption {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    color: var(--bone);
+    text-shadow: 0 0 16px rgb(5 5 5 / 0.9), 0 0 4px rgb(5 5 5 / 0.8);
+  }
+  .lab__cap-place {
+    color: var(--bone-2);
+  }
+
+  @media (max-width: 899px) {
+    .lab__body {
+      grid-template-columns: 1fr;
+    }
+    .lab__stage {
+      display: none;
+    }
+    .lab__mshot {
+      position: relative;
+      display: block;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background: var(--ink-3);
+      margin-top: 4px;
+    }
+    .lab__mshot :global(picture),
+    .lab__mshot :global(img) {
+      width: 100%;
+      height: 100%;
+    }
+    .lab__mshot :global(img) {
+      object-fit: cover;
+    }
+    .lab__mplace {
+      position: absolute;
+      left: 10px;
+      bottom: 8px;
+      color: var(--bone);
+      text-shadow: 0 0 14px rgb(5 5 5 / 0.85);
+    }
+    .lab__desc-in {
+      max-width: none;
+    }
+    .lab__item {
+      grid-template-columns: 34px 1fr;
+      grid-template-areas:
+        'n name'
+        '. spec'
+        '. desc';
+    }
+    .lab__spec {
+      padding-top: 4px;
+    }
+  }
+</style>

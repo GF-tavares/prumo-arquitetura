@@ -1,0 +1,5 @@
+node_modules/
+dist/
+.astro/
+# Originais das fotos e texturas (fora do Git, ver CREDITOS.md)
+assets-src/

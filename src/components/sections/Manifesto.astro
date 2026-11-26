@@ -1,0 +1,329 @@
+---
+const first = 'Arquitetura não começa na forma.'.split(' ');
+const second = 'Começa na maneira como você quer viver.'.split(' ');
+
+const keys = [
+  { n: '01', word: 'Arquitetura', note: 'O ato de decidir onde cada coisa fica.', fx: 'rise' },
+  { n: '02', word: 'Forma', note: 'Consequência, nunca ponto de partida.', fx: 'wipe' },
+  { n: '03', word: 'Luz', note: 'O primeiro material que chega e o último que sai.', fx: 'glow' },
+  { n: '04', word: 'Matéria', note: 'Pedra, madeira e aço: o que o tempo vai tocar.', fx: 'focus' },
+  { n: '05', word: 'Tempo', note: 'Uma casa boa melhora com os anos.', fx: 'track' },
+] as const;
+---
+
+<section class="manifesto" id="manifesto" data-header="dark" data-chapter="Manifesto" aria-labelledby="manifesto-title">
+  <div class="manifesto__stage" data-manifesto-stage>
+    <div class="manifesto__sticky wrap">
+      <p class="manifesto__label t-mono"><span class="idx"><span>01</span><span>Ideia</span></span></p>
+      <h2 id="manifesto-title" class="manifesto__text">
+        <span class="manifesto__a t-sans-display" data-words>
+          {first.map((w) => <span class="w">{w}</span>)}
+        </span>
+        <span class="manifesto__b t-serif" data-words>
+          {second.map((w, i) => <span class="w">{i === second.length - 1 ? <em>{w}</em> : w}</span>)}
+        </span>
+      </h2>
+      <p class="manifesto__foot t-mono t-mono--dim">Antes do desenho, uma pergunta.</p>
+    </div>
+  </div>
+
+  <div class="manifesto__keys" data-keys>
+    <div class="spine" data-spine aria-hidden="true">
+      <i class="spine__ticks" data-spine-ticks></i>
+      <i class="spine__line" data-spine-line></i>
+      <span class="spine__bob" data-spine-bob></span>
+      <div class="spine__marks" data-spine-marks></div>
+    </div>
+
+    <ul class="keys">
+      {
+        keys.map((k, i) => (
+          <li class={`key key--${i % 2 === 0 ? 'r' : 'l'}`} data-key data-fx={k.fx}>
+            <div class="key__inner">
+              <p class="key__n t-mono" data-key-n>{k.n}</p>
+              <h3 class="key__word t-sans-display" data-key-word aria-label={k.word}>
+                <span class="line-mask"><span data-key-text>{k.word}</span></span>
+              </h3>
+              <p class="key__note t-small" data-key-note>{k.note}</p>
+              <i class="key__tie" data-key-tie aria-hidden="true"></i>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .manifesto {
+    position: relative;
+    background: var(--ink);
+    color: var(--bone);
+    /* o estado inicial de "Tempo" (espaçamento aberto) não pode esticar a página */
+    overflow-x: clip;
+  }
+
+  /* ---- Texto que se acende palavra por palavra ---- */
+  .manifesto__stage {
+    height: auto;
+  }
+  .manifesto__sticky {
+    position: relative;
+    height: 100svh;
+    min-height: 560px;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding-top: calc(var(--header-h) + 3vh);
+    padding-bottom: clamp(24px, 6vh, 64px);
+  }
+  .manifesto__label {
+    color: var(--bone-2);
+  }
+  .manifesto__text {
+    align-self: center;
+    display: grid;
+    gap: clamp(16px, 3.4vh, 38px);
+  }
+  .manifesto__a {
+    display: block;
+    font-weight: 500;
+    font-size: clamp(2.1rem, 0.7rem + 5.5vw, 7rem);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+    max-width: 24ch;
+  }
+  .manifesto__b {
+    display: block;
+    font-size: clamp(2.6rem, 0.8rem + 7.4vw, 9.6rem);
+    line-height: 0.92;
+    letter-spacing: -0.032em;
+    text-wrap: balance;
+    max-width: 19ch;
+  }
+  .manifesto__b em {
+    font-style: italic;
+  }
+  .w {
+    display: inline-block;
+    margin-right: 0.22em;
+    transition: none;
+  }
+  :global(.js) .manifesto .w {
+    opacity: 0.13;
+  }
+  .manifesto__foot {
+    justify-self: end;
+  }
+
+  /* ---- O prumo e as cinco palavras ---- */
+  .manifesto__keys {
+    position: relative;
+    padding-block: 6vh 10vh;
+  }
+  .spine {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .spine__line {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    background: var(--bone);
+    opacity: 0.85;
+    transform-origin: top;
+    transform: scaleY(0);
+  }
+  /* Cotas: traços de 40 em 40 px e maiores a cada 200, revelados só até onde o fio já desceu */
+  .spine__ticks {
+    position: absolute;
+    left: -9px;
+    top: 0;
+    width: 19px;
+    height: 100%;
+    background:
+      repeating-linear-gradient(to bottom, var(--bone-3) 0 1px, transparent 1px 200px) 0 0 / 19px 100% no-repeat,
+      repeating-linear-gradient(to bottom, var(--bone-3) 0 1px, transparent 1px 40px) 4px 0 / 11px 100% no-repeat;
+    clip-path: inset(0 0 100% 0);
+    opacity: 0.8;
+  }
+  .spine__bob {
+    position: absolute;
+    left: -6px;
+    top: 0;
+    width: 13px;
+    height: 20px;
+    margin-top: -1px;
+    background: var(--cut);
+    clip-path: polygon(50% 100%, 100% 32%, 50% 0, 0 32%);
+    transform: translateY(0);
+    opacity: 0;
+  }
+  .spine__marks {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 100%;
+  }
+  :global(.spine__mark) {
+    position: absolute;
+    left: 16px;
+    transform: translateY(-50%);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--bone-3);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.7s var(--ease-out);
+  }
+  :global(.spine__mark.is-on) {
+    opacity: 1;
+  }
+
+  .keys {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    padding-inline: var(--gutter);
+  }
+  .key {
+    position: relative;
+    min-height: 44vh;
+    display: grid;
+    align-items: center;
+  }
+  .key__inner {
+    position: relative;
+    width: calc(50% - clamp(28px, 4vw, 72px));
+    display: grid;
+    gap: 10px;
+  }
+  .key--r .key__inner {
+    justify-self: end;
+    padding-left: clamp(0px, 1vw, 12px);
+  }
+  .key--l .key__inner {
+    justify-self: start;
+    text-align: right;
+    justify-items: end;
+  }
+  .key__n {
+    color: var(--bone-3);
+  }
+  .key__word {
+    font-size: clamp(3rem, 0.8rem + 9.4vw, 10.6rem);
+    line-height: 0.9;
+    letter-spacing: -0.055em;
+    font-weight: 600;
+  }
+  .key__note {
+    max-width: 30ch;
+    color: var(--bone-2);
+  }
+  /* fio que liga a palavra ao prumo */
+  .key__tie {
+    position: absolute;
+    top: 50%;
+    height: 1px;
+    width: clamp(28px, 4vw, 72px);
+    background: var(--bone);
+    opacity: 0.6;
+    transform-origin: left;
+  }
+  .key--r .key__tie {
+    left: calc(-1 * clamp(28px, 4vw, 72px));
+    transform-origin: left;
+  }
+  .key--l .key__tie {
+    right: calc(-1 * clamp(28px, 4vw, 72px));
+    transform-origin: right;
+  }
+  .key__tie::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    width: 5px;
+    height: 5px;
+    background: var(--cut);
+  }
+  .key--r .key__tie::after {
+    left: -2px;
+  }
+  .key--l .key__tie::after {
+    right: -2px;
+  }
+  :global(.js) .key [data-key-n],
+  :global(.js) .key [data-key-note] {
+    opacity: 0;
+  }
+  :global(.js) .key__tie {
+    transform: scaleX(0);
+  }
+  .key[data-fx='glow'] .line-mask,
+  .key[data-fx='focus'] .line-mask,
+  .key[data-fx='track'] .line-mask,
+  .key[data-fx='wipe'] .line-mask {
+    overflow: visible;
+  }
+  :global(.key__letter) {
+    display: inline-block;
+    will-change: transform, opacity, filter;
+  }
+
+  @media (max-width: 860px) {
+    .manifesto__text {
+      max-width: none;
+    }
+    .manifesto__b {
+      max-width: none;
+    }
+    .keys {
+      padding-inline: var(--gutter);
+    }
+    .key {
+      min-height: 38vh;
+    }
+    .key__inner {
+      width: calc(100% - 26px);
+      margin-left: 26px;
+      text-align: left;
+      justify-items: start;
+    }
+    .key--l .key__inner,
+    .key--r .key__inner {
+      justify-self: start;
+      text-align: left;
+      justify-items: start;
+    }
+    .spine {
+      left: calc(var(--gutter) + 4px);
+    }
+    :global(.spine__mark) {
+      display: none;
+    }
+    .key__tie,
+    .key--l .key__tie,
+    .key--r .key__tie {
+      left: -22px;
+      right: auto;
+      width: 22px;
+      transform-origin: left;
+    }
+    .key--l .key__tie::after {
+      left: -2px;
+      right: auto;
+    }
+    .key__word {
+      font-size: clamp(2.8rem, 1rem + 14vw, 6.4rem);
+    }
+  }
+</style>

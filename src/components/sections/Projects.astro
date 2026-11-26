@@ -1,0 +1,329 @@
+---
+import { Picture } from 'astro:assets';
+import { photos } from '../../content/assets';
+import { projects } from '../../content/projects';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<section class="projects" id="projects" data-header="dark" data-chapter="Obras" aria-labelledby="projects-title">
+  <div class="wrap projects__head">
+    <p class="projects__label t-mono"><span class="idx"><span>02</span><span>Projetos</span></span></p>
+    <h2 id="projects-title" class="projects__title t-serif">
+      <span class="line-mask"><span data-proj-title>Obras <em>selecionadas</em></span></span>
+    </h2>
+    <p class="projects__count t-mono t-mono--dim" data-proj-title>({pad(projects.length)}) / 2024 a 2026</p>
+  </div>
+
+  <ol class="plist wrap" data-plist>
+    {
+      projects.map((p, i) => (
+        <li class="prow" data-prow data-i={i}>
+          <a
+            class="prow__link"
+            href={`${base}/projetos/${p.slug}/`}
+            data-cursor="ver"
+            aria-label={`${p.name}, ${p.city}, ${p.year}. Ver projeto`}
+          >
+            <span class="prow__rule" aria-hidden="true"></span>
+            <span class="prow__n t-mono">{p.n}</span>
+            <span class="prow__name t-sans-display line-mask"><span data-prow-name>{p.name}</span></span>
+            <span class="prow__meta t-mono"><span>{p.category}</span><span>{p.area} m²</span></span>
+            <span class="prow__place t-mono"><span>{p.city}</span><span>{p.year}</span></span>
+            <svg class="prow__arrow" viewBox="0 0 22 10" width="22" height="10" aria-hidden="true">
+              <path d="M0 5h20M16 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1" />
+            </svg>
+
+            <span class="prow__reveal">
+              <span class="prow__reveal-in">
+                <span class="prow__media">
+                  <Picture
+                    src={photos[p.cover].src}
+                    alt=""
+                    widths={[480, 800, 1200, 1600]}
+                    sizes="(max-width: 899px) 92vw, 62vw"
+                    formats={['avif', 'webp']}
+        fallbackFormat="webp"
+                    loading="lazy"
+                    decoding="async"
+                    style={`object-position:${photos[p.cover].focus}`}
+                  />
+                </span>
+                <span class="prow__text">
+                  <span class="prow__concept t-lead">{p.concept}</span>
+                  <span class="prow__cta t-mono">
+                    <span>Ver projeto</span>
+                    <svg viewBox="0 0 22 10" width="22" height="10" aria-hidden="true">
+                      <path d="M0 5h20M16 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1" />
+                    </svg>
+                  </span>
+                </span>
+              </span>
+            </span>
+          </a>
+        </li>
+      ))
+    }
+    <li class="plist__end" aria-hidden="true"><span class="prow__rule prow__rule--end"></span></li>
+  </ol>
+</section>
+
+<style>
+  .projects {
+    position: relative;
+    background: var(--ink);
+    color: var(--bone);
+    padding-block: clamp(96px, 16vh, 200px) clamp(96px, 16vh, 200px);
+  }
+
+  .projects__head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 18px var(--gap);
+    margin-bottom: clamp(36px, 8vh, 96px);
+  }
+  .projects__label {
+    grid-column: 1 / -1;
+    color: var(--bone-2);
+  }
+  .projects__title {
+    font-size: clamp(3rem, 0.6rem + 9.4vw, 11rem);
+    line-height: 0.9;
+    letter-spacing: -0.035em;
+  }
+  .projects__title em {
+    font-style: italic;
+  }
+  .projects__count {
+    padding-bottom: 0.8em;
+  }
+  :global(.js) .projects [data-proj-title] {
+    opacity: 0;
+  }
+
+  /* ---- Linhas ---- */
+  .plist {
+    position: relative;
+    display: block;
+  }
+  .prow {
+    position: relative;
+  }
+  .prow__link {
+    position: relative;
+    display: grid;
+    grid-template-columns: clamp(40px, 5vw, 84px) minmax(0, 1fr) auto auto 40px;
+    align-items: center;
+    column-gap: var(--gap);
+    row-gap: 0;
+    padding-block: clamp(18px, 3.6vh, 44px);
+    transition: opacity 0.6s var(--ease-soft);
+  }
+  .prow__rule {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: var(--line-2);
+    transform-origin: left;
+  }
+  .prow__rule--end {
+    position: static;
+    display: block;
+  }
+  .plist__end {
+    height: 1px;
+  }
+  .prow__n {
+    color: var(--bone-3);
+    font-variant-numeric: tabular-nums;
+    transition: color 0.4s;
+  }
+  .prow__name {
+    font-size: clamp(2.2rem, 0.6rem + 5.6vw, 7rem);
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+    font-weight: 500;
+    text-transform: none;
+    padding-block: 0.06em 0.16em;
+  }
+  .prow__name > span {
+    display: block;
+    transition:
+      transform 0.8s var(--ease-out),
+      color 0.4s;
+  }
+  .prow__meta,
+  .prow__place {
+    display: grid;
+    gap: 2px;
+    color: var(--bone-2);
+    min-width: 12ch;
+  }
+  .prow__place {
+    text-align: right;
+  }
+  .prow__arrow {
+    justify-self: end;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition:
+      opacity 0.5s var(--ease-out),
+      transform 0.8s var(--ease-out);
+  }
+
+  /* ---- A linha se expande e mostra o projeto ---- */
+  .prow__reveal {
+    grid-column: 2 / -1;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.95s var(--ease-out);
+  }
+  .prow.is-open .prow__reveal {
+    grid-template-rows: 1fr;
+  }
+  .prow__reveal-in {
+    min-height: 0;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+    column-gap: var(--gap);
+    align-items: end;
+  }
+  .prow__media {
+    display: block;
+    position: relative;
+    height: clamp(230px, 40vh, 440px);
+    margin-top: clamp(14px, 2vh, 24px);
+    overflow: hidden;
+    background: var(--ink-3);
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 1.1s var(--ease-in-out);
+  }
+  .prow__media :global(picture),
+  .prow__media :global(img) {
+    width: 100%;
+    height: 100%;
+  }
+  .prow__media :global(img) {
+    object-fit: cover;
+    transform: scale(1.22);
+    transition: transform 1.6s var(--ease-out);
+  }
+  .prow.is-open .prow__media {
+    clip-path: inset(0 0 0 0);
+  }
+  .prow.is-open .prow__media :global(img) {
+    transform: scale(1);
+  }
+  .prow__text {
+    display: grid;
+    gap: 18px;
+    align-content: end;
+    margin-top: clamp(14px, 2vh, 24px);
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 0.5s var(--ease-soft),
+      transform 0.8s var(--ease-out);
+  }
+  .prow.is-open .prow__text {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.3s;
+  }
+  .prow__concept {
+    max-width: 30ch;
+    color: var(--bone);
+    font-size: clamp(1.05rem, 0.8rem + 0.7vw, 1.5rem);
+    line-height: 1.28;
+  }
+  .prow__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    letter-spacing: 0.16em;
+    color: var(--bone);
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line-2);
+    justify-self: start;
+    transition: border-color 0.4s;
+  }
+  .prow__cta svg {
+    transition: transform 0.7s var(--ease-out);
+  }
+  .prow__link:hover .prow__cta svg {
+    transform: translateX(8px);
+  }
+  .prow__link:hover .prow__cta {
+    border-color: var(--cut);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    /* as outras linhas recuam enquanto uma está aberta */
+    .plist.has-open .prow:not(.is-open) .prow__link {
+      opacity: 0.32;
+    }
+    .prow.is-open .prow__name > span {
+      transform: translateX(0.12em);
+    }
+    .prow.is-open .prow__n {
+      color: var(--cut);
+    }
+    .prow.is-open .prow__arrow {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* ---- Tablet e celular (ou sem mouse): cada obra é um bloco com a foto sempre à vista ---- */
+  @media (max-width: 899px), (hover: none) {
+    .prow__link {
+      grid-template-columns: 1fr auto;
+      grid-template-areas:
+        'fig fig'
+        'name name'
+        'meta place';
+      gap: 12px var(--gap);
+      padding-block: 22px 26px;
+    }
+    .prow__n,
+    .prow__arrow,
+    .prow__text {
+      display: none;
+    }
+    .prow__reveal {
+      grid-area: fig;
+      grid-template-rows: 1fr;
+    }
+    .prow__reveal-in {
+      grid-template-columns: 1fr;
+    }
+    .prow__media {
+      height: auto;
+      aspect-ratio: 4 / 3;
+      margin-top: 0;
+      clip-path: none;
+    }
+    .prow__media :global(img) {
+      transform: none;
+    }
+    .prow__name {
+      grid-area: name;
+      font-size: clamp(2.4rem, 1rem + 9vw, 4.6rem);
+    }
+    .prow__meta {
+      grid-area: meta;
+    }
+    .prow__place {
+      grid-area: place;
+    }
+    .projects__head {
+      grid-template-columns: 1fr;
+    }
+    .projects__count {
+      padding-bottom: 0;
+    }
+  }
+</style>

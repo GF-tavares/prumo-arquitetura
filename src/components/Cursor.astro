@@ -1,0 +1,65 @@
+---
+// Cursor discreto (só com ponteiro fino): um ponto que vira anel e ganha um rótulo
+// (VIEW, DRAG, EXPLORE, OPEN) sobre elementos com data-cursor.
+---
+
+<div class="cursor" aria-hidden="true" data-cursor-root>
+  <div class="cursor__ring" data-cursor-ring></div>
+  <div class="cursor__dot" data-cursor-dot></div>
+  <span class="cursor__label t-mono" data-cursor-label></span>
+</div>
+
+<style is:global>
+  .cursor {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 130;
+    pointer-events: none;
+    display: none;
+    mix-blend-mode: difference;
+    color: #fff;
+  }
+  html.has-cursor .cursor {
+    display: block;
+  }
+  html.has-cursor,
+  html.has-cursor a,
+  html.has-cursor button,
+  html.has-cursor [data-cursor] {
+    cursor: none;
+  }
+  .cursor__dot,
+  .cursor__ring {
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 50%;
+    will-change: transform;
+  }
+  .cursor__dot {
+    width: 7px;
+    height: 7px;
+    margin: -3.5px 0 0 -3.5px;
+    background: #fff;
+  }
+  .cursor__ring {
+    width: 44px;
+    height: 44px;
+    margin: -22px 0 0 -22px;
+    border: 1px solid #fff;
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  .cursor__label {
+    position: absolute;
+    left: 0;
+    top: 0;
+    white-space: nowrap;
+    opacity: 0;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    transform: translate(34px, -50%);
+    will-change: transform, opacity;
+  }
+</style>

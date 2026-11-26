@@ -1,0 +1,123 @@
+/* Sistema tipográfico: sans grotesca (Inter Tight), serifa editorial (Instrument Serif)
+   e mono técnica (IBM Plex Mono) para cotas, coordenadas e rótulos. */
+
+.t-mono {
+  font-family: var(--font-mono);
+  font-size: var(--t-mono);
+  font-weight: 400;
+  letter-spacing: 0.09em;
+  line-height: 1.55;
+  text-transform: uppercase;
+}
+
+.t-mono--tight {
+  letter-spacing: 0.04em;
+}
+
+.t-mono--dim {
+  color: var(--bone-3);
+}
+
+.t-small {
+  font-size: var(--t-small);
+  line-height: 1.55;
+}
+
+.t-lead {
+  font-size: var(--t-lead);
+  line-height: 1.32;
+  letter-spacing: -0.012em;
+  font-weight: 400;
+}
+
+.t-sans-display {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 0.88;
+  text-transform: uppercase;
+}
+
+.t-serif {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.028em;
+  line-height: 0.9;
+}
+
+.t-serif em,
+.t-italic {
+  font-style: italic;
+}
+
+/* Índice + linha desenhada + rótulo: substitui o travessão tipográfico */
+.idx {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9em;
+}
+
+.idx::after {
+  content: '';
+  order: 1;
+  width: 2.6em;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.55;
+}
+
+.idx > :last-child {
+  order: 2;
+}
+
+/* Máscara de linha: cada linha de título sobe de dentro de uma janela */
+.line-mask {
+  display: block;
+  overflow: hidden;
+  /* folga embaixo para não cortar descendentes (g, p, y) e em cima para os acentos
+     (til e agudo de Ã e É em caixa alta passam bem acima da altura das maiúsculas) */
+  padding-block: 0.26em 0.22em;
+  margin-block: -0.26em -0.22em;
+}
+
+.line-mask > span {
+  display: block;
+  will-change: transform;
+}
+
+/* Link com linha que se desenha */
+.link-line {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.2em;
+}
+
+.link-line::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: currentColor;
+  transform-origin: right;
+  transition: transform 0.7s var(--ease-out);
+}
+
+.link-line:hover::after,
+.link-line:focus-visible::after {
+  transform: scaleX(0);
+  transform-origin: right;
+  animation: link-line-redraw 0.7s var(--ease-out) 0.05s forwards;
+}
+
+@keyframes link-line-redraw {
+  0% {
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  100% {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}

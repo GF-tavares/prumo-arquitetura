@@ -1,0 +1,68 @@
+---
+// Leitura discreta de orientação: uma "cota de nível" que muda com a rolagem
+// e o capítulo atual; e uma linha de progresso na borda direita.
+---
+
+<div class="hud t-mono" aria-hidden="true">
+  <span class="hud__elev" data-hud-elev>+0.000</span>
+  <span class="hud__chapter" data-hud-chapter>Início</span>
+</div>
+<div class="progress" aria-hidden="true"><i data-progress></i></div>
+
+<style>
+  .hud {
+    position: fixed;
+    right: 12px;
+    top: 50%;
+    z-index: var(--z-header);
+    display: flex;
+    gap: 16px;
+    color: #fff;
+    mix-blend-mode: difference;
+    pointer-events: none;
+    font-size: 10px;
+    writing-mode: vertical-rl;
+    transform: translateY(-50%) rotate(180deg);
+  }
+  .hud__elev {
+    font-variant-numeric: tabular-nums;
+  }
+  .hud__chapter {
+    opacity: 0.7;
+  }
+  .progress {
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    z-index: var(--z-header);
+    pointer-events: none;
+    background: rgb(236 232 223 / 0.06);
+    mix-blend-mode: difference;
+  }
+  .progress i {
+    position: absolute;
+    inset: 0;
+    background: #fff;
+    transform-origin: top;
+    transform: scaleY(0);
+    opacity: 0.55;
+  }
+  :global(.js:not(.header-on)) .hud,
+  :global(.js:not(.header-on)) .progress {
+    opacity: 0;
+  }
+  :global(.js) .hud,
+  :global(.js) .progress {
+    transition: opacity 1s var(--ease-out);
+  }
+  @media (max-width: 720px) {
+    .hud__chapter {
+      display: none;
+    }
+    .hud {
+      right: 6px;
+    }
+  }
+</style>

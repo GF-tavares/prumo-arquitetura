@@ -1,0 +1,116 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Menu from '../components/Menu.astro';
+import Cursor from '../components/Cursor.astro';
+import Footer from '../components/Footer.astro';
+import { materialShots, photos, textureCredits } from '../content/assets';
+import { site } from '../config/site';
+
+const rows = [...Object.entries(photos), ...Object.entries(materialShots).map(([k, p]) => [`material-${k}`, p] as const)].map(([key, p]) => ({ key, ...p.credit }));
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<Base title={`Créditos | ${site.name}`} description="Origem e licença das imagens, texturas, fontes e bibliotecas usadas neste projeto conceitual.">
+  <Fragment slot="chrome">
+    <Header />
+    <Menu />
+    <Cursor />
+  </Fragment>
+
+  <div class="cred wrap">
+    <p class="t-mono cred__k"><span class="idx"><span>i</span><span>Créditos</span></span></p>
+    <h1 class="cred__title t-serif">Créditos</h1>
+    <p class="cred__lead t-lead">
+      {site.demoNotice} Cada arquivo tem a licença do próprio site de origem, que permite uso gratuito.
+    </p>
+
+    <h2 class="cred__h t-mono">Fotografias (provisórias)</h2>
+    <ul class="cred__list">
+      {
+        rows.map((r) => (
+          <li>
+            <span class="t-mono">{r.key}</span>
+            <span>{r.author}</span>
+            <a class="link-line t-mono" href={r.url} target="_blank" rel="noopener">{r.source}</a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <h2 class="cred__h t-mono">Texturas</h2>
+    <p class="cred__p">
+      Fundos do laboratório de materiais derivados de texturas CC0 do <a class="link-line" href="https://ambientcg.com" target="_blank" rel="noopener">ambientCG</a>:
+      {Object.entries(textureCredits).map(([k, v], i, a) => <span>{k} ({v}){i < a.length - 1 ? ', ' : '.'}</span>)}
+    </p>
+
+    <h2 class="cred__h t-mono">Tipografia e código</h2>
+    <p class="cred__p">
+      Inter Tight, Instrument Serif e IBM Plex Mono, servidas pelo próprio site (Fontsource) sob a licença SIL Open Font License 1.1. Three.js, GSAP e Lenis (licença MIT), Astro (licença MIT).
+    </p>
+
+    <a class="cred__back t-mono link-line" href={`${base}/`}>Voltar ao site</a>
+  </div>
+  <Footer />
+</Base>
+
+<style>
+  .cred {
+    min-height: 100svh;
+    padding-top: calc(var(--header-h) + 8vh);
+    padding-bottom: 12vh;
+    background: var(--ink);
+    display: grid;
+    align-content: start;
+    gap: 22px;
+  }
+  .cred__k {
+    color: var(--bone-2);
+  }
+  .cred__title {
+    font-size: clamp(3.6rem, 1rem + 9vw, 10rem);
+    line-height: 0.9;
+    letter-spacing: -0.035em;
+  }
+  .cred__lead {
+    max-width: 52ch;
+    color: var(--bone-2);
+    margin-bottom: 4vh;
+  }
+  .cred__h {
+    margin-top: 5vh;
+    color: var(--bone-2);
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line-2);
+  }
+  .cred__list {
+    display: grid;
+  }
+  .cred__list li {
+    display: grid;
+    grid-template-columns: minmax(150px, 0.5fr) 1fr auto;
+    gap: 18px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--bone-2);
+  }
+  .cred__list li span:first-child {
+    color: var(--bone-3);
+  }
+  .cred__p {
+    max-width: 70ch;
+    color: var(--bone-2);
+  }
+  .cred__back {
+    justify-self: start;
+    margin-top: 5vh;
+  }
+  @media (max-width: 720px) {
+    .cred__list li {
+      grid-template-columns: 1fr auto;
+    }
+    .cred__list li span:first-child {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

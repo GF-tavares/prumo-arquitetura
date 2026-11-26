@@ -1,0 +1,42 @@
+---
+import { site } from '../config/site';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<footer class="site-footer wrap t-mono">
+  <span>© 2026 {site.name}. {site.legalName}.</span>
+  <span class="site-footer__note">Projeto conceitual de portfólio. Marca, textos e obras fictícios. Design e desenvolvimento: {site.maker}.</span>
+  <span class="site-footer__links">
+    <a class="link-line" href={`${base}/creditos/`}>Créditos das imagens</a>
+    <a class="link-line" href={`${base}/#top`}>Início</a>
+  </span>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: 22px clamp(56px, 7vh, 72px);
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px var(--gap);
+    align-items: start;
+    color: var(--bone-3);
+    background: var(--ink);
+  }
+  .site-footer__note {
+    max-width: 62ch;
+    text-transform: none;
+    letter-spacing: 0.04em;
+  }
+  .site-footer__links {
+    display: flex;
+    gap: 20px;
+    color: var(--bone-2);
+  }
+  @media (max-width: 899px) {
+    .site-footer {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

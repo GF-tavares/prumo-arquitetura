@@ -1,0 +1,381 @@
+---
+const steps = [
+  {
+    n: '01',
+    name: 'Ouvir',
+    text: 'Ouvimos o terreno, a família e a rotina antes de desenhar uma linha.',
+    coord: 'E 00.00 / N 00.00',
+    paths: ['M52 35A28 28 0 0 1 52 75', 'M66 24A44 44 0 0 1 66 86', 'M80 13A60 60 0 0 1 80 97', 'M94 4A76 76 0 0 1 94 106'],
+    dot: [34, 55],
+  },
+  {
+    n: '02',
+    name: 'Definir',
+    text: 'Transformamos o que ouvimos em programa, prazo e um limite de orçamento.',
+    coord: 'E 05.50 / N 03.20',
+    paths: ['M30 25H130V85H30Z', 'M30 100H130', 'M30 94V106', 'M130 94V106', 'M80 45V65', 'M70 55H90'],
+  },
+  {
+    n: '03',
+    name: 'Desenhar',
+    text: 'Plantas, cortes e maquetes. A luz de cada hora é testada no papel antes da obra.',
+    coord: 'E 12.40 / N 07.80',
+    paths: ['M30 92L30 20L104 92Z', 'M44 80L44 46L78 80Z', 'M62 102L142 22'],
+  },
+  {
+    n: '04',
+    name: 'Obra',
+    text: 'Acompanhamos a obra toda semana. O desenho só termina no último detalhe executado.',
+    coord: 'E 18.20 / N 11.10',
+    paths: ['M20 92H140', 'M20 74H140', 'M20 56H140', 'M20 38H140', 'M52 92V74', 'M92 92V74', 'M132 92V74', 'M36 74V56', 'M76 74V56', 'M116 74V56', 'M52 56V38', 'M92 56V38', 'M132 56V38'],
+  },
+  {
+    n: '05',
+    name: 'Habitar',
+    text: 'Voltamos depois de um ano. A casa é ajustada a quem realmente vive nela.',
+    coord: 'E 24.00 / N 14.60',
+    paths: ['M24 94H136', 'M58 94V34', 'M102 94V34', 'M58 34H102', 'M102 94A44 44 0 0 0 58 50', 'M128 22A7 7 0 1 0 128 22.01', 'M128 8V12', 'M128 32V36', 'M114 22H118', 'M138 22H142'],
+  },
+] as const;
+---
+
+<section class="method" id="method" data-header="dark" data-chapter="Método" data-method aria-labelledby="method-title">
+  <div class="method__stage" data-method-stage>
+    <div class="sheet wrap">
+      <span class="sheet__mark sheet__mark--tl" aria-hidden="true"></span>
+      <span class="sheet__mark sheet__mark--tr" aria-hidden="true"></span>
+
+      <header class="sheet__head">
+        <p class="t-mono sheet__label"><span class="idx"><span>04</span><span>Método</span></span></p>
+        <h2 id="method-title" class="sheet__title t-serif">
+          <span class="line-mask"><span data-method-line>Da pergunta</span></span>
+          <span class="line-mask"><span data-method-line><em>à casa.</em></span></span>
+        </h2>
+        <p class="sheet__sub t-small">Cinco etapas, sempre nesta ordem. Cada uma termina quando a seguinte começa a fazer sentido.</p>
+      </header>
+
+      <div class="sheet__track" data-method-track aria-hidden="true">
+        <i class="sheet__rail"></i>
+        <i class="sheet__fill" data-method-fill></i>
+        <span class="sheet__bob" data-method-bob></span>
+      </div>
+
+      <ol class="steps" data-steps>
+        {
+          steps.map((s, i) => (
+            <li class="step" data-step={i}>
+              <span class="step__n t-mono">{s.n}</span>
+              <h3 class="step__name t-sans-display">{s.name}</h3>
+              <p class="step__text t-small">{s.text}</p>
+              <svg class="step__fig" viewBox="0 0 160 110" width="160" height="110" aria-hidden="true" focusable="false">
+                {'dot' in s && s.dot ? <circle cx={s.dot[0]} cy={s.dot[1]} r="3.2" fill="currentColor" /> : null}
+                {s.paths.map((d) => <path d={d} pathLength="1" class="fig" />)}
+              </svg>
+              <span class="step__coord t-mono">{s.coord}</span>
+            </li>
+          ))
+        }
+      </ol>
+
+      <footer class="sheet__block t-mono" aria-hidden="true">
+        <span><i>Escritório</i>Prumo Arquitetura e Interiores</span>
+        <span><i>Prancha</i>06 / 09</span>
+        <span><i>Assunto</i>Processo de projeto</span>
+        <span><i>Escala</i>1:100</span>
+        <span><i>Data</i>09.2026</span>
+        <span><i>Rev.</i>A</span>
+      </footer>
+    </div>
+  </div>
+</section>
+
+<style>
+  .method {
+    position: relative;
+    background: var(--ink);
+    color: var(--bone);
+  }
+  .method__stage {
+    position: relative;
+    padding-block: clamp(96px, 14vh, 160px) clamp(56px, 8vh, 96px);
+  }
+  :global(.js) .method__stage {
+    /* desktop: a prancha ocupa uma tela e o marcador atravessa sozinho as cinco etapas */
+    min-height: 100svh;
+    padding-block: calc(var(--header-h) + 1vh) clamp(20px, 3.4vh, 40px);
+    display: grid;
+  }
+
+  .sheet {
+    position: relative;
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: clamp(14px, 2.6vh, 32px);
+  }
+  .sheet__mark {
+    position: absolute;
+    top: -6px;
+    width: 12px;
+    height: 12px;
+  }
+  .sheet__mark::before,
+  .sheet__mark::after {
+    content: '';
+    position: absolute;
+    background: var(--bone-3);
+  }
+  .sheet__mark::before {
+    width: 12px;
+    height: 1px;
+    top: 6px;
+  }
+  .sheet__mark::after {
+    width: 1px;
+    height: 12px;
+    left: 6px;
+  }
+  .sheet__mark--tl {
+    left: calc(var(--gutter) - 6px);
+  }
+  .sheet__mark--tr {
+    right: calc(var(--gutter) - 6px);
+  }
+
+  .sheet__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.42fr);
+    align-items: end;
+    gap: 14px var(--gap);
+  }
+  .sheet__label {
+    grid-column: 1 / -1;
+    color: var(--bone-2);
+  }
+  .sheet__title {
+    font-size: clamp(2.6rem, 0.8rem + 6.8vw, 8.4rem);
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+  }
+  .sheet__title em {
+    font-style: italic;
+  }
+  .sheet__sub {
+    color: var(--bone-2);
+    max-width: 36ch;
+    padding-bottom: 0.6em;
+  }
+  :global(.js) .method [data-method-line] {
+    visibility: hidden;
+  }
+
+  /* ---- Trilho de cota com o marcador ---- */
+  .sheet__track {
+    position: relative;
+    height: 12px;
+    margin-top: clamp(6px, 1.4vh, 16px);
+  }
+  .sheet__rail,
+  .sheet__fill {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+  }
+  .sheet__rail {
+    background:
+      repeating-linear-gradient(to right, var(--bone-3) 0 1px, transparent 1px 20%) 0 0 / 100% 12px no-repeat,
+      var(--line-2);
+    background-size:
+      100% 12px,
+      100% 1px;
+    background-position:
+      0 -6px,
+      0 0;
+    background-repeat: no-repeat;
+    height: 1px;
+    overflow: visible;
+  }
+  .sheet__fill {
+    background: var(--cut);
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+  .sheet__bob {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 9px;
+    height: 9px;
+    margin: -4.5px 0 0 -4.5px;
+    background: var(--cut);
+    transform: rotate(45deg);
+  }
+
+  /* ---- As cinco colunas da prancha ---- */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    min-height: 0;
+  }
+  .step {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto auto 1fr auto auto;
+    gap: 10px;
+    padding: clamp(14px, 2.4vh, 26px) clamp(12px, 1.4vw, 24px) 0;
+    border-left: 1px solid var(--line);
+    opacity: 0.9;
+    transition: opacity 0.7s var(--ease-soft);
+  }
+  .step:last-child {
+    border-right: 1px solid var(--line);
+  }
+  :global(.js) .step {
+    opacity: 0.3;
+  }
+  :global(.js) .step.is-past {
+    opacity: 0.62;
+  }
+  :global(.js) .step.is-on {
+    opacity: 1;
+  }
+  .step__n {
+    color: var(--bone-3);
+  }
+  .step.is-on .step__n {
+    color: var(--cut);
+  }
+  .step__name {
+    font-size: clamp(1.7rem, 0.4rem + 2.62vw, 3.9rem);
+    line-height: 0.92;
+    letter-spacing: -0.055em;
+    font-weight: 500;
+  }
+  .step__text {
+    color: var(--bone-2);
+    max-width: 26ch;
+    align-self: start;
+  }
+  .step__fig {
+    align-self: end;
+    width: min(100%, 190px);
+    height: auto;
+    color: var(--bone);
+    overflow: visible;
+  }
+  .fig {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1;
+  }
+  :global(.js) .fig {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  .step__coord {
+    color: var(--bone-3);
+    font-size: 10px;
+    padding-bottom: 6px;
+  }
+
+  .sheet__block {
+    display: grid;
+    grid-template-columns: repeat(6, auto);
+    justify-content: end;
+    border: 1px solid var(--line-2);
+    width: fit-content;
+    margin-left: auto;
+    font-size: 10px;
+  }
+  .sheet__block span {
+    display: grid;
+    gap: 2px;
+    padding: 8px 14px;
+    border-left: 1px solid var(--line-2);
+    color: var(--bone);
+  }
+  .sheet__block span:first-child {
+    border-left: 0;
+  }
+  .sheet__block i {
+    font-style: normal;
+    color: var(--bone-3);
+    letter-spacing: 0.12em;
+  }
+
+  /* ---- Celular e tablet: a prancha vira uma lista vertical com fio de progresso ---- */
+  @media (max-width: 899px) {
+    :global(.js) .method__stage {
+      min-height: 0;
+      display: block;
+      padding-block: clamp(80px, 12vh, 120px) clamp(56px, 8vh, 96px);
+    }
+    .sheet {
+      grid-template-rows: none;
+    }
+    .sheet__head {
+      grid-template-columns: 1fr;
+    }
+    .sheet__track {
+      display: none;
+    }
+    .steps {
+      grid-template-columns: 1fr;
+      position: relative;
+    }
+    .step {
+      grid-template-columns: 42px 1fr 128px;
+      grid-template-areas:
+        'n name fig'
+        '. text fig'
+        '. coord fig';
+      column-gap: 14px;
+      padding: 22px 0 22px 0;
+      border-left: 0;
+      border-top: 1px solid var(--line-2);
+    }
+    .step:last-child {
+      border-right: 0;
+      border-bottom: 1px solid var(--line-2);
+    }
+    .step__n {
+      grid-area: n;
+    }
+    .step__name {
+      grid-area: name;
+      font-size: clamp(2.4rem, 1rem + 8vw, 4rem);
+    }
+    .step__text {
+      grid-area: text;
+    }
+    .step__fig {
+      grid-area: fig;
+      align-self: center;
+      width: 128px;
+    }
+    .step__coord {
+      grid-area: coord;
+    }
+    .sheet__block {
+      display: none;
+    }
+    .sheet__mark {
+      display: none;
+    }
+  }
+  @media (max-width: 520px) {
+    .step {
+      grid-template-columns: 34px 1fr;
+      grid-template-areas:
+        'n name'
+        '. text'
+        '. fig'
+        '. coord';
+    }
+    .step__fig {
+      justify-self: start;
+    }
+  }
+</style>

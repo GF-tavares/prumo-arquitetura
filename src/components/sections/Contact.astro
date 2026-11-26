@@ -1,0 +1,179 @@
+---
+import { site } from '../../config/site';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const mail = `mailto:${site.email}?subject=${encodeURIComponent('Novo projeto')}`;
+---
+
+<section class="contact" id="contact" data-header="dark" data-chapter="Contato" data-contact aria-labelledby="contact-title">
+  <div class="contact__plumb" aria-hidden="true" data-contact-plumb><i></i><b></b></div>
+
+  <div class="wrap contact__inner">
+    <p class="contact__label t-mono"><span class="idx"><span>07</span><span>Contato</span></span></p>
+
+    <h2 id="contact-title" class="contact__title t-sans-display">
+      <span class="line-mask"><span data-contact-line>Vamos criar</span></span>
+      <span class="line-mask"><span data-contact-line>algo que</span></span>
+      <span class="line-mask"><span data-contact-line>dure <em class="t-serif">muito.</em></span></span>
+    </h2>
+
+    <a class="contact__cta" href={mail} data-magnetic data-cursor="abrir" data-contact-fade>
+      <span class="contact__cta-text t-sans-display">Iniciar um projeto</span>
+      <svg viewBox="0 0 40 18" width="40" height="18" aria-hidden="true"><path d="M0 9h37M29 1l8 8-8 8" fill="none" stroke="currentColor" stroke-width="1.2" /></svg>
+    </a>
+
+    <dl class="contact__cols t-mono" data-contact-fade>
+      <div><dt>Escritório</dt><dd>{site.city}<br />{site.country}<br /><span class="t-mono--dim">{site.coords}</span></dd></div>
+      <div><dt>Instagram</dt><dd><a class="link-line" href={site.instagram.url} target="_blank" rel="noopener">{site.instagram.handle}</a></dd></div>
+      <div><dt>E-mail</dt><dd><a class="link-line" href={`mailto:${site.email}`}>{site.email}</a></dd></div>
+      <div><dt>Horário</dt><dd>Seg a sex<br />9h às 18h</dd></div>
+    </dl>
+  </div>
+
+  <footer class="footer wrap t-mono">
+    <span>© 2026 {site.name}. {site.legalName}.</span>
+    <span class="footer__note">Projeto conceitual de portfólio. Marca, textos e obras fictícios. Design e desenvolvimento: {site.maker}.</span>
+    <span class="footer__links">
+      <a class="link-line" href={`${base}/creditos/`}>Créditos das imagens</a>
+      <a class="link-line" href={`${base}/#top`}>Voltar ao topo</a>
+    </span>
+  </footer>
+</section>
+
+<style>
+  .contact {
+    position: relative;
+    background: var(--ink);
+    color: var(--bone);
+    overflow: clip;
+    padding-top: clamp(96px, 18vh, 220px);
+  }
+  .contact__plumb {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    height: clamp(120px, 20vh, 260px);
+    width: 0;
+    pointer-events: none;
+  }
+  .contact__plumb i {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    background: var(--bone);
+    opacity: 0.8;
+    transform-origin: top;
+  }
+  .contact__plumb b {
+    position: absolute;
+    left: -6px;
+    bottom: -18px;
+    width: 13px;
+    height: 20px;
+    background: var(--cut);
+    clip-path: polygon(50% 100%, 100% 32%, 50% 0, 0 32%);
+  }
+
+  .contact__inner {
+    position: relative;
+    display: grid;
+    gap: clamp(28px, 6vh, 64px);
+  }
+  .contact__label {
+    color: var(--bone-2);
+  }
+  .contact__title {
+    font-size: clamp(3rem, 0.6rem + 10.4vw, 12rem);
+    line-height: 0.88;
+    letter-spacing: -0.06em;
+    font-weight: 600;
+  }
+  .contact__title em {
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: -0.03em;
+    font-weight: 400;
+    display: inline-block;
+    padding-right: 0.1em;
+  }
+  :global(.js) .contact [data-contact-line] {
+    visibility: hidden;
+  }
+  :global(.js) .contact [data-contact-fade] {
+    opacity: 0;
+  }
+
+  .contact__cta {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: clamp(14px, 2vw, 28px);
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line-2);
+    transition: border-color 0.5s;
+  }
+  .contact__cta-text {
+    font-size: clamp(1.7rem, 0.6rem + 3.4vw, 4.4rem);
+    letter-spacing: -0.04em;
+    font-weight: 500;
+    line-height: 1;
+  }
+  .contact__cta svg {
+    transition: transform 0.8s var(--ease-out);
+    flex: none;
+  }
+  .contact__cta:hover svg,
+  .contact__cta:focus-visible svg {
+    transform: translateX(10px);
+  }
+  .contact__cta:hover {
+    border-color: var(--cut);
+  }
+
+  .contact__cols {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px var(--gap);
+    padding-top: 24px;
+    border-top: 1px solid var(--line-2);
+  }
+  .contact__cols dt {
+    color: var(--bone-3);
+    margin-bottom: 6px;
+  }
+  .contact__cols dd {
+    margin: 0;
+  }
+
+  .footer {
+    margin-top: clamp(64px, 12vh, 150px);
+    padding-block: 22px clamp(56px, 7vh, 72px);
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px var(--gap);
+    align-items: start;
+    color: var(--bone-3);
+  }
+  .footer__note {
+    max-width: 62ch;
+    text-transform: none;
+    letter-spacing: 0.04em;
+  }
+  .footer__links {
+    display: flex;
+    gap: 20px;
+    color: var(--bone-2);
+  }
+
+  @media (max-width: 899px) {
+    .contact__cols {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .footer {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

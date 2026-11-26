@@ -1,0 +1,269 @@
+---
+import { Picture } from 'astro:assets';
+import { photos } from '../../content/assets';
+import { site } from '../../config/site';
+
+const hands = photos.studioHands;
+const fragments = [
+  { key: 'concreteShadow', label: 'Concreto', note: 'Fôrma, sombra e junta', ratio: '3 / 4' },
+  { key: 'stairOakLight', label: 'Carvalho', note: 'Degrau, luz e corrimão', ratio: '3 / 4' },
+  { key: 'travertineColumns', label: 'Travertino', note: 'Ritmo de colunas', ratio: '4 / 3' },
+  { key: 'oakSlatsDark', label: 'Ripas', note: 'Sombra entre peças', ratio: '4 / 3' },
+  { key: 'lightPatches', label: 'Luz', note: 'Sol sobre o piso', ratio: '3 / 4' },
+] as const;
+---
+
+<section class="studio" id="studio" data-header="dark" data-chapter="Estúdio" data-studio aria-labelledby="studio-title">
+  <div class="wrap studio__grid">
+    <figure class="studio__figure" data-studio-fig>
+      <div class="studio__frame" data-studio-frame>
+        <Picture
+          src={hands.src}
+          alt={hands.alt}
+          widths={[720, 1100, 1600]}
+          sizes="(max-width: 899px) 92vw, 44vw"
+          formats={['avif', 'webp']}
+        fallbackFormat="webp"
+          loading="lazy"
+          decoding="async"
+          class="studio__img"
+          data-studio-img
+          style={`object-position:${hands.focus}`}
+        />
+      </div>
+      <figcaption class="t-mono t-mono--dim">Fig. 05 / Maquete de estudo, escala 1:50</figcaption>
+    </figure>
+
+    <div class="studio__body">
+      <p class="studio__label t-mono"><span class="idx"><span>05</span><span>Estúdio</span></span></p>
+      <h2 id="studio-title" class="studio__title t-serif">
+        <span class="line-mask"><span data-studio-line>Criamos espaços</span></span>
+        <span class="line-mask"><span data-studio-line>que não pedem</span></span>
+        <span class="line-mask"><span data-studio-line>atenção.</span></span>
+        <span class="line-mask"><span data-studio-line class="studio__earn"><em>Eles a conquistam.</em></span></span>
+      </h2>
+      <p class="studio__copy t-lead" data-studio-fade>
+        O {site.name} é um escritório de quatorze pessoas no Rio de Janeiro. Desenhamos casas, apartamentos e poucos espaços culturais, sempre com o mesmo método: menos gestos, mais precisão. Quase tudo passa pela mão antes de chegar à tela.
+      </p>
+      <dl class="stats" data-studio-fade>
+        <div><dd class="stats__n" data-count="2011" data-plain>2011</dd><dt class="t-mono">Fundação</dt></div>
+        <div><dd class="stats__n" data-count="63">63</dd><dt class="t-mono">Obras entregues</dt></div>
+        <div><dd class="stats__n" data-count="14">14</dd><dt class="t-mono">Pessoas</dt></div>
+      </dl>
+    </div>
+  </div>
+
+  <div class="frag">
+    <div class="wrap frag__head t-mono">
+      <span class="idx"><span>05.1</span><span>Fragmentos</span></span>
+      <span class="frag__hint t-mono--dim" aria-hidden="true">Arraste</span>
+    </div>
+    <div class="frag__track" data-frag tabindex="0" role="region" aria-label="Fragmentos de obra. Role horizontalmente." data-cursor="arraste">
+      <ul class="frag__list">
+        {
+          fragments.map((f, i) => (
+            <li class="frag__item" style={`--ratio:${f.ratio}`}>
+              <figure>
+                <div class="frag__img" data-frag-img>
+                  <Picture
+                    src={photos[f.key].src}
+                    alt={photos[f.key].alt}
+                    widths={[480, 800, 1100]}
+                    sizes="(max-width: 899px) 70vw, 30vw"
+                    formats={['avif', 'webp']}
+        fallbackFormat="webp"
+                    loading="lazy"
+                    decoding="async"
+                    draggable="false"
+                    style={`object-position:${photos[f.key].focus}`}
+                  />
+                </div>
+                <figcaption class="t-mono">
+                  <span>F.{String(i + 1).padStart(2, '0')}</span>
+                  <span>{f.label}</span>
+                  <span class="t-mono--dim">{f.note}</span>
+                </figcaption>
+              </figure>
+            </li>
+          ))
+        }
+        <li class="frag__pad" aria-hidden="true"></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .studio {
+    position: relative;
+    background: var(--ink);
+    color: var(--bone);
+    padding-block: clamp(96px, 16vh, 200px) clamp(72px, 12vh, 140px);
+  }
+
+  .studio__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: clamp(28px, 6vw, 110px);
+    align-items: start;
+  }
+  .studio__figure {
+    position: sticky;
+    top: 14vh;
+    display: grid;
+    gap: 12px;
+    margin: 0;
+  }
+  .studio__frame {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--ink-3);
+  }
+  .studio__frame :global(picture),
+  .studio__img {
+    width: 100%;
+    height: 100%;
+  }
+  .studio__img {
+    object-fit: cover;
+    transform: scale(1.16);
+    will-change: transform;
+  }
+
+  .studio__label {
+    color: var(--bone-2);
+    margin-bottom: clamp(16px, 3vh, 30px);
+  }
+  .studio__title {
+    font-size: clamp(2.6rem, 0.8rem + 5.6vw, 7.2rem);
+    line-height: 0.93;
+    letter-spacing: -0.035em;
+  }
+  .studio__earn {
+    color: var(--bone-2);
+  }
+  :global(.js) .studio [data-studio-line] {
+    visibility: hidden;
+  }
+  :global(.js) .studio [data-studio-fade] {
+    opacity: 0;
+  }
+  .studio__copy {
+    margin-top: clamp(28px, 6vh, 64px);
+    max-width: 38ch;
+    color: var(--bone-2);
+  }
+  .stats {
+    margin-top: clamp(32px, 7vh, 72px);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px clamp(28px, 4.4vw, 76px);
+    padding-top: 20px;
+    border-top: 1px solid var(--line-2);
+  }
+  .stats > div {
+    display: grid;
+    gap: 6px;
+  }
+  .stats__n {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: clamp(2.6rem, 1rem + 4.2vw, 5.4rem);
+    letter-spacing: -0.05em;
+    line-height: 0.95;
+    font-variant-numeric: tabular-nums;
+  }
+  .stats dt {
+    color: var(--bone-3);
+    order: 2;
+  }
+
+  /* ---- Fragmentos arrastáveis ---- */
+  .frag {
+    margin-top: clamp(72px, 14vh, 170px);
+  }
+  .frag__head {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    color: var(--bone-2);
+  }
+  .frag__track {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    cursor: grab;
+    padding-inline: var(--gutter);
+    overscroll-behavior-x: contain;
+  }
+  .frag__track::-webkit-scrollbar {
+    display: none;
+  }
+  .frag__track.is-dragging {
+    cursor: grabbing;
+    user-select: none;
+  }
+  .frag__list {
+    display: flex;
+    gap: clamp(12px, 1.6vw, 28px);
+    align-items: flex-end;
+    width: max-content;
+  }
+  .frag__item {
+    flex: none;
+    width: clamp(220px, 27vw, 460px);
+  }
+  .frag__item figure {
+    margin: 0;
+    display: grid;
+    gap: 10px;
+  }
+  .frag__img {
+    position: relative;
+    aspect-ratio: var(--ratio);
+    overflow: hidden;
+    background: var(--ink-3);
+    clip-path: inset(0 0 0 0);
+  }
+  .frag__img :global(picture),
+  .frag__img :global(img) {
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  .frag__img :global(img) {
+    object-fit: cover;
+    transform: scale(1.08);
+    transition: transform 1.2s var(--ease-out);
+  }
+  .frag__item:hover .frag__img :global(img) {
+    transform: scale(1);
+  }
+  .frag__item figcaption {
+    display: flex;
+    gap: 12px;
+    color: var(--bone);
+  }
+  .frag__pad {
+    flex: none;
+    width: var(--gutter);
+  }
+
+  @media (max-width: 899px) {
+    .studio__grid {
+      grid-template-columns: 1fr;
+    }
+    .studio__figure {
+      position: relative;
+      top: 0;
+    }
+    .studio__frame {
+      aspect-ratio: 4 / 3.4;
+    }
+    .frag__item {
+      width: min(72vw, 360px);
+    }
+  }
+</style>

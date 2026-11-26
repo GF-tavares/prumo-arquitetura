@@ -1,0 +1,62 @@
+/* Tokens do PRUMO. Uma paleta de tinta e pedra, uma única cor de acento. */
+
+:root {
+  color-scheme: dark;
+
+  /* Tinta */
+  --ink-0: #050505;
+  --ink: #0a0a0a;
+  --ink-2: #111111;
+  --ink-3: #191918;
+  --graphite: #262625;
+
+  /* Osso e pedra */
+  --bone: #ece8df;
+  --bone-2: rgb(236 232 223 / 0.68);
+  --bone-3: rgb(236 232 223 / 0.42);
+  --line: rgb(236 232 223 / 0.13);
+  --line-2: rgb(236 232 223 / 0.28);
+  --stone: #b9b1a3;
+  --ash: #8c8b86;
+
+  /* Seção clara (quebra do manifesto de tipografia) */
+  --paper: #e8e4da;
+  --paper-2: #d7d2c5;
+  --paper-ink: #0c0c0b;
+  --paper-line: rgb(12 12 11 / 0.16);
+
+  /* Acento único: o vermelho do lápis de revisão, a linha de corte da prancha.
+     Só aparece no prumo (o peso da linha), no corte da seção e no cursor ativo. */
+  --cut: #e3441d;
+
+  /* Tipografia */
+  --font-sans: 'Inter Tight Variable', 'Inter Tight', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-serif: 'Instrument Serif', 'Times New Roman', Georgia, serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  --t-mono: 0.6875rem;
+  --t-small: 0.8125rem;
+  --t-body: clamp(0.95rem, 0.9rem + 0.22vw, 1.0625rem);
+  --t-lead: clamp(1.125rem, 0.95rem + 0.9vw, 1.625rem);
+  --t-h3: clamp(1.75rem, 1.1rem + 2.4vw, 3.25rem);
+  --t-h2: clamp(2.5rem, 1rem + 5.4vw, 6.75rem);
+  --t-hero: clamp(3.75rem, 0.6rem + 12.2vw, 14rem);
+
+  /* Grid */
+  --gutter: clamp(20px, 3.2vw, 56px);
+  --gap: clamp(12px, 1.6vw, 28px);
+  --header-h: clamp(60px, 8.5vh, 84px);
+
+  /* Movimento */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast: 0.25s;
+  --dur: 0.6s;
+
+  /* Camadas */
+  --z-header: 50;
+  --z-menu: 60;
+  --z-cursor: 90;
+  --z-intro: 100;
+}

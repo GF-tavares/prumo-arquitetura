@@ -1,0 +1,257 @@
+---
+import { Picture } from 'astro:assets';
+import { photos } from '../../content/assets';
+import { projects } from '../../content/projects';
+
+const p = projects[0];
+const photo = photos[p.cover];
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<section class="seq" id="sequence" data-header="dark" data-chapter="Planta" data-seq aria-labelledby="seq-title">
+  <h2 id="seq-title" class="sr-only">Da planta à fotografia: {p.name}, {p.city}, {p.year}</h2>
+
+  <div class="seq__stage" data-seq-stage>
+    <canvas class="seq__canvas" data-seq-canvas aria-hidden="true"></canvas>
+
+    <div class="seq__photo" data-seq-photo>
+      <Picture
+        src={photo.src}
+        alt={photo.alt}
+        widths={[960, 1440, 1920, 2560]}
+        sizes="100vw"
+        formats={['avif', 'webp']}
+        fallbackFormat="webp"
+        loading="lazy"
+        decoding="async"
+        pictureAttributes={{ class: 'seq__picture' }}
+        class="seq__img"
+        style={`object-position:${photo.focus}`}
+        data-seq-img
+      />
+      <div class="seq__vignette" aria-hidden="true"></div>
+    </div>
+
+    <div class="seq__labels" data-seq-labels aria-hidden="true"></div>
+
+    <p class="seq__phase t-mono" aria-hidden="true">
+      <span class="seq__phase-a" data-seq-phase-a>Planta baixa / esc. 1:100</span>
+      <span class="seq__phase-b" data-seq-phase-b>Fotografia / {p.name}</span>
+    </p>
+
+    <div class="seq__info wrap" data-seq-info>
+      <p class="seq__kicker t-mono" data-seq-kicker><span class="idx"><span>{p.n}</span><span>Projeto em destaque</span></span></p>
+      <h3 class="seq__title t-serif" data-seq-title>
+        <span class="line-mask"><span data-seq-line>Casa <em>Horizonte</em></span></span>
+      </h3>
+      <p class="seq__concept t-lead" data-seq-line-fade>{p.concept}</p>
+      <dl class="seq__facts t-mono" data-seq-line-fade>
+        <div><dt>Área</dt><dd>{p.area} m²</dd></div>
+        <div><dt>Local</dt><dd>{p.city}</dd></div>
+        <div><dt>Ano</dt><dd>{p.year}</dd></div>
+      </dl>
+      <a class="seq__cta t-mono link-line" href={`${base}/projetos/${p.slug}/`} data-cursor="ver" data-seq-cta data-seq-line-fade>
+        <span>Ver projeto</span>
+        <svg viewBox="0 0 22 10" width="22" height="10" aria-hidden="true"><path d="M0 5h20M16 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1"></path></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .seq {
+    position: relative;
+    background: var(--ink);
+    color: var(--bone);
+  }
+  /* Sem JS (ou movimento reduzido): a foto e as informações aparecem direto, sem sequência */
+  .seq__stage {
+    position: relative;
+    height: 100svh;
+    min-height: 560px;
+    overflow: clip;
+  }
+  :global(.js) .seq:not(.seq--static) {
+    height: 540vh;
+  }
+  :global(.js) .seq:not(.seq--static) .seq__stage {
+    position: sticky;
+    top: 0;
+  }
+
+  .seq__canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+  }
+  :global(.js) .seq:not(.seq--static) .seq__canvas {
+    display: block;
+  }
+
+  .seq__photo {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    will-change: clip-path;
+  }
+  .seq__picture,
+  .seq__img {
+    width: 100%;
+    height: 100%;
+  }
+  .seq__img {
+    object-fit: cover;
+    transform-origin: 50% 55%;
+    will-change: transform;
+  }
+  .seq__vignette {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(120% 90% at 50% 50%, transparent 55%, rgb(5 5 5 / 0.5)),
+      linear-gradient(to top, rgb(5 5 5 / 0.72), transparent 46%);
+    pointer-events: none;
+  }
+
+  .seq__labels {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  :global(.sl) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    white-space: nowrap;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    line-height: 1.35;
+    text-transform: none;
+    color: var(--bone);
+    will-change: transform, opacity;
+  }
+  :global(.sl--center) {
+    translate: -50% -50%;
+  }
+  :global(.sl--left) {
+    translate: 0 -50%;
+  }
+  :global(.sl--up) {
+    translate: -50% -100%;
+  }
+  :global(.sl--cut) {
+    color: var(--cut);
+    text-transform: uppercase;
+  }
+
+  .seq__phase {
+    position: absolute;
+    left: var(--gutter);
+    top: calc(var(--header-h) + 10px);
+    display: grid;
+    color: var(--bone-2);
+    pointer-events: none;
+  }
+  .seq__phase > span {
+    grid-area: 1 / 1;
+  }
+  :global(.js) .seq:not(.seq--static) .seq__phase-b {
+    opacity: 0;
+  }
+  :global(.seq--static) .seq__phase-a {
+    display: none;
+  }
+
+  .seq__info {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: grid;
+    gap: clamp(10px, 1.8vh, 20px);
+    padding-bottom: clamp(28px, 6vh, 64px);
+    justify-items: start;
+  }
+  .seq__title {
+    font-size: clamp(3.4rem, 0.6rem + 10vw, 12rem);
+    line-height: 0.88;
+    letter-spacing: -0.035em;
+    color: var(--bone);
+  }
+  .seq__title em {
+    font-style: italic;
+  }
+  .seq__concept {
+    max-width: 34ch;
+    color: var(--bone);
+    text-shadow: 0 0 24px rgb(5 5 5 / 0.7);
+  }
+  .seq__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px clamp(22px, 3vw, 48px);
+    margin-top: 6px;
+  }
+  .seq__facts div {
+    display: grid;
+    gap: 2px;
+  }
+  .seq__facts dt {
+    color: var(--bone-3);
+  }
+  .seq__cta {
+    margin-top: clamp(4px, 1.4vh, 16px);
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    letter-spacing: 0.16em;
+  }
+  :global(.js) .seq:not(.seq--static) .seq__info {
+    pointer-events: none;
+  }
+  :global(.js) .seq:not(.seq--static) .seq__cta {
+    pointer-events: auto;
+  }
+  :global(.js) .seq:not(.seq--static) [data-seq-line],
+  :global(.js) .seq:not(.seq--static) [data-seq-line-fade],
+  :global(.js) .seq:not(.seq--static) [data-seq-kicker] {
+    opacity: 0;
+  }
+
+  @media (min-width: 900px) {
+    .seq__info {
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      grid-template-areas:
+        'kicker kicker'
+        'title facts'
+        'title concept'
+        'title cta';
+      column-gap: var(--gap);
+    }
+    .seq__kicker {
+      grid-area: kicker;
+    }
+    .seq__title {
+      grid-area: title;
+    }
+    .seq__facts {
+      grid-area: facts;
+      justify-self: end;
+    }
+    .seq__concept {
+      grid-area: concept;
+      justify-self: end;
+      text-align: right;
+    }
+    .seq__cta {
+      grid-area: cta;
+      justify-self: end;
+    }
+  }
+</style>

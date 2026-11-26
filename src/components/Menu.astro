@@ -1,0 +1,184 @@
+---
+import { Picture } from 'astro:assets';
+import { nav, site } from '../config/site';
+import { photos } from '../content/assets';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const hints: Record<string, string> = {
+  studio: 'Quem somos e como pensamos',
+  projects: 'Obras selecionadas, 2024 a 2026',
+  method: 'Da escuta à casa habitada',
+  contact: 'Comece um projeto',
+};
+---
+
+<div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menu" aria-hidden="true" inert data-menu>
+  <div class="menu__bg" aria-hidden="true">
+    {
+      nav.map((item, i) => (
+        <div class="menu__bgimg" data-menu-bg={i}>
+          <Picture
+            src={photos[item.image].src}
+            alt=""
+            widths={[640, 1280]}
+            sizes="100vw"
+            formats={['avif', 'webp']}
+        fallbackFormat="webp"
+            loading="lazy"
+            decoding="async"
+            class="menu__img"
+          />
+        </div>
+      ))
+    }
+    <div class="menu__scrim"></div>
+  </div>
+
+  <nav class="menu__nav" aria-label="Principal">
+    <ol>
+      {
+        nav.map((item, i) => (
+          <li class="menu__item">
+            <a href={`${base}/${item.href}`} data-menu-link={i} data-cursor="explorar">
+              <span class="menu__idx t-mono idx">
+                <span>{item.index}</span>
+              </span>
+              <span class="menu__label-mask line-mask">
+                <span class="menu__label t-sans-display">{item.label}</span>
+              </span>
+              <span class="menu__hint t-mono">{hints[item.id]}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </nav>
+
+  <footer class="menu__foot t-mono">
+    <a class="link-line" href={`mailto:${site.email}`}>{site.email}</a>
+    <a class="link-line" href={site.instagram.url} rel="noopener" target="_blank">Instagram {site.instagram.handle}</a>
+    <span>{site.city}, {site.country}</span>
+    <span class="menu__coords">{site.coords}</span>
+  </footer>
+</div>
+
+<style>
+  .menu {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-menu);
+    color: var(--bone);
+    visibility: hidden;
+    clip-path: inset(0 0 100% 0);
+    display: grid;
+    grid-template-rows: 1fr auto;
+    padding: calc(var(--header-h) + 2vh) var(--gutter) clamp(20px, 3.4vh, 40px);
+    overflow: hidden;
+  }
+  .menu.is-open {
+    visibility: visible;
+  }
+
+  .menu__bg {
+    position: absolute;
+    inset: 0;
+    background: var(--ink);
+    z-index: -1;
+  }
+  .menu__bgimg {
+    position: absolute;
+    inset: 0;
+    clip-path: inset(0 0 100% 0);
+    overflow: hidden;
+  }
+  .menu__bgimg :global(picture),
+  .menu__img {
+    width: 100%;
+    height: 100%;
+  }
+  .menu__img {
+    object-fit: cover;
+    transform: scale(1.12);
+  }
+  .menu__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgb(10 10 10 / 0.9), rgb(10 10 10 / 0.6) 55%, rgb(10 10 10 / 0.62)),
+      linear-gradient(to top, rgb(10 10 10 / 0.7), transparent 45%);
+  }
+
+  .menu__nav {
+    align-self: center;
+  }
+  .menu__nav ol {
+    display: grid;
+    gap: clamp(2px, 1.2vh, 14px);
+  }
+  .menu__item a {
+    display: grid;
+    grid-template-columns: clamp(52px, 8vw, 128px) 1fr auto;
+    align-items: baseline;
+    gap: var(--gap);
+    padding-block: clamp(4px, 1vh, 12px);
+    opacity: 0.72;
+    transition: opacity 0.5s var(--ease-soft);
+  }
+  .menu__nav:hover .menu__item a {
+    opacity: 0.4;
+  }
+  .menu__nav .menu__item a:hover,
+  .menu__nav .menu__item a:focus-visible {
+    opacity: 1;
+  }
+  .menu__idx {
+    color: var(--bone-2);
+  }
+  .menu__label {
+    display: block;
+    font-size: clamp(3.2rem, 0.6rem + 11vw, 11rem);
+    line-height: 0.92;
+    transition: transform 0.7s var(--ease-out);
+  }
+  .menu__item a:hover .menu__label {
+    transform: translateX(0.06em);
+  }
+  .menu__hint {
+    color: var(--bone-2);
+    text-align: right;
+    max-width: 24ch;
+    opacity: 0;
+    transform: translateX(-8px);
+    transition:
+      opacity 0.5s var(--ease-out),
+      transform 0.7s var(--ease-out);
+  }
+  .menu__item a:hover .menu__hint,
+  .menu__item a:focus-visible .menu__hint {
+    opacity: 1;
+    transform: none;
+  }
+
+  .menu__foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px clamp(18px, 3vw, 44px);
+    justify-content: space-between;
+    color: var(--bone-2);
+  }
+
+  @media (max-width: 860px) {
+    .menu__item a {
+      grid-template-columns: 44px 1fr;
+    }
+    .menu__hint {
+      display: none;
+    }
+    .menu__coords {
+      display: none;
+    }
+    .menu__label {
+      font-size: clamp(2.4rem, 0.5rem + 11.2vw, 5rem);
+    }
+  }
+</style>
